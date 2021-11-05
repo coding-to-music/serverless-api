@@ -10,4 +10,4 @@ router
   .get('/api/posts/:id', Post)
   .get('*', () => new Response("Not found", { status: 404 }))
 
-export const handleRequest = request => router.handle(request)
+export const handleRequest = (request: any) => router.handle(request)

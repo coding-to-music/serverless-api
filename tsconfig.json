@@ -6,6 +6,7 @@
     "lib": ["esnext"],
     "alwaysStrict": true,
     "strict": true,
+    "skipLibCheck": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
     "sourceMap": true,

@@ -1,6 +1,6 @@
 import Store from '../posts_store'
 
-const Post = async request => {
+const Post = async (request: any) => {
   const posts = new Store()
   const postId = request.params.id
 

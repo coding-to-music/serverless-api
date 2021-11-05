@@ -329,17 +329,159 @@ webpack 5.38.1 compiled with 2 errors in 1348 ms
 Error: Build failed! Status Code: 1
 ```
 
+### fixing the errors
+
+My offending line is:
+
+There is this line: 
+
+```java
+export const handleRequest = request => router.handle(request)
+```
+
+Per this:
+
+https://stackoverflow.com/questions/43064221/typescript-ts7006-parameter-xxx-implicitly-has-an-any-type
+
+
+Change this line:
+
+```java
+let user = Users.find(user => user.id === query);
+```
+
+to this:
+
+```java
+let user = Users.find((user: any) => user.id === query); 
+// use "any" or some other interface to type this argument
+```
+
+### In src/handler.ts
+
+Change from:
+
+```java
+export const handleRequest = request => router.handle(request)
+```
+
+to
+
+```java
+export const handleRequest = (request: any) => router.handle(request)
+```
+
+### In src/handlers/post.ts
+
+Change from:
+
+```java
+const Post = async request => {
+```
+
+to
+
+```java
+const Post = async (request: any) => {
+```
+
 
 ### Publishing the API
 
 With your API configured, you are ready to publish. Run `wrangler publish` in your terminal, and when you have successfully deployed your application, you should be able to make requests to your API to see data returned in the console:
 
-```sh
+wrangler publish
+```java
+wrangler publish
+```
+
+Output
+```java
+🌀  Running npm install && npm run build
+
+up to date, audited 593 packages in 2s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> worker-typescript-template@1.0.0 build
+> webpack
+
+asset worker.js 6.15 KiB [compared for emit] (name: main) 1 related asset
+modules by path ./src/*.ts 1.62 KiB
+  ./src/index.ts 223 bytes [built] [code generated]
+  ./src/handler.ts 708 bytes [built] [code generated]
+  ./src/posts_store.ts 725 bytes [built] [code generated]
+modules by path ./src/handlers/*.ts 1.21 KiB
+  ./src/handlers/posts.ts 597 bytes [built] [code generated]
+  ./src/handlers/post.ts 647 bytes [built] [code generated]
+./node_modules/itty-router/dist/itty-router.min.js 546 bytes [built] [code generated]
+webpack 5.38.1 compiled successfully in 2648 ms
+✨  Build completed successfully!
+✨  Successfully published your script to
+ https://serverless-api.coding-to-music.workers.dev
+```
+
+### Testing the API
+
+```java
 ---
 header: "Testing the API"
 ---
-curl serverless-api.signalnerve.workers.dev/api/posts
-curl serverless-api.signalnerve.workers.dev/api/posts/1
+curl serverless-api.coding-to-music.workers.dev/api/posts
+curl serverless-api.coding-to-music.workers.dev/api/posts/1
+curl serverless-api.coding-to-music.workers.dev/api/posts/2
+
+# or 
+
+curl serverless-api.coding-to-music.workers.dev/api/posts | jq
+curl serverless-api.coding-to-music.workers.dev/api/posts/1 | jq
+curl serverless-api.coding-to-music.workers.dev/api/posts/2 | jq
+```
+
+call api/posts
+```java
+curl https://serverless-api.coding-to-music.workers.dev/api/posts | jq
+```
+
+```java
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   355  100   355    0     0   6016      0 --:--:-- --:--:-- --:--:--  6016
+[
+  {
+    "id": 1,
+    "title": "My first blog post",
+    "text": "Hello world! This is my first blog post on my new Cloudflare Workers + Pages blog.",
+    "published_at": "2020-10-23T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Updating my blog",
+    "text": "It's my second blog post! I'm still writing and publishing using Cloudflare Workers + Pages :)",
+    "published_at": "2020-10-26T00:00:00.000Z"
+  }
+]
+```
+
+call api/posts/1
+```java
+curl https://serverless-api.coding-to-music.workers.dev/api/posts/1 | jq
+```
+
+```java
+| jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   171  100   171    0     0   3109      0 --:--:-- --:--:-- --:--:--  3109
+{
+  "id": 1,
+  "title": "My first blog post",
+  "text": "Hello world! This is my first blog post on my new Cloudflare Workers + Pages blog.",
+  "published_at": "2020-10-23T00:00:00.000Z"
+}
 ```
 
 ## Deploying a new React application to Pages
@@ -425,7 +567,7 @@ const Posts = () => {
   useEffect(() => {
     const getPosts = async () => {
       const resp = await fetch(
-        "https://serverless-api.signalnerve.workers.dev/api/posts"
+        "https://serverless-api.coding-to-music.workers.dev/api/posts"
       );
       const postsResp = await resp.json();
       setPosts(postsResp);
@@ -466,7 +608,7 @@ const Post = ({ id }) => {
   useEffect(() => {
     const getPost = async () => {
       const resp = await fetch(
-        `https://serverless-api.signalnerve.workers.dev/api/posts/${id}`
+        `https://serverless-api.coding-to-music.workers.dev/api/posts/${id}`
       );
       const postResp = await resp.json();
       setPost(postResp);
@@ -529,8 +671,8 @@ Now, when you run `wrangler publish`, your API will be published and served on `
 
 In this tutorial, you built a full blog application by combining a front end deployed with Cloudflare Pages, and a serverless API built with Cloudflare Workers. You can find the source code for both codebases on GitHub:
 
-- Blog frontend: https://github.com/signalnerve/blog-frontend
-- Serverless API: https://github.com/signalnerve/serverless-api
+- Blog frontend: https://github.com/coding-to-music/blog-frontend
+- Serverless API: https://github.com/coding-to-music/serverless-api
 
 If you enjoyed this tutorial, refer to the [headless CMS tutorial] to learn how to build a blog using Nuxt.js and Sanity.io.
 
