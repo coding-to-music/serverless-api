@@ -1,4 +1,4 @@
-# Build an API for your frontend using Cloudflare Workers
+# Build a serverless API for your frontend using Cloudflare Workers
 
 ---
 pcx-content-type: tutorial
@@ -28,7 +28,7 @@ You will use the Workers TypeScript template to generate our project. Don't worr
 ---
 header: Creating a new Workers project with Wrangler
 ---
-$ wrangler generate serverless-api https://github.com/cloudflare/worker-typescript-template
+wrangler generate serverless-api https://github.com/cloudflare/worker-typescript-template
 ```
 
 ### Adding a router
@@ -41,7 +41,7 @@ While you can manually parse incoming URLs, it is much easier to use a routing l
 ---
 header: Installing itty-router
 ---
-$ npm install itty-router
+npm install itty-router
 ---
 ```
 
@@ -187,6 +187,54 @@ const Post = async request => {
 export default Post
 ```
 
+wrangler dev
+```java
+wrangler dev
+```
+
+Output
+```java
+🌀  Running npm install && npm run build
+
+up to date, audited 593 packages in 2s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> worker-typescript-template@1.0.0 build
+> webpack
+
+asset worker.js 6.04 KiB [emitted] (name: main) 1 related asset
+modules by path ./src/*.ts 1.62 KiB
+  ./src/index.ts 223 bytes [built] [code generated]
+  ./src/handler.ts 706 bytes [built] [code generated] [1 error]
+  ./src/posts_store.ts 725 bytes [built] [code generated]
+modules by path ./src/handlers/*.ts 1.11 KiB
+  ./src/handlers/posts.ts 541 bytes [built] [code generated]
+  ./src/handlers/post.ts 591 bytes [built] [code generated] [1 error]
+./node_modules/itty-router/dist/itty-router.min.js 546 bytes [built] [code generated]
+
+ERROR in /mnt/ap/ap/serverless-api/src/handler.ts
+./src/handler.ts 13:29-36
+[tsl] ERROR in /mnt/ap/ap/serverless-api/src/handler.ts(13,30)
+      TS7006: Parameter 'request' implicitly has an 'any' type.
+ts-loader-default_e3b0c44298fc1c14
+ @ ./src/index.ts 3:18-38
+
+ERROR in /mnt/ap/ap/serverless-api/src/handlers/post.ts
+./src/handlers/post.ts 3:19-26
+[tsl] ERROR in /mnt/ap/ap/serverless-api/src/handlers/post.ts(3,20)
+      TS7006: Parameter 'request' implicitly has an 'any' type.
+ts-loader-default_e3b0c44298fc1c14
+ @ ./src/handler.ts 9:31-57
+ @ ./src/index.ts 3:18-38
+
+webpack 5.38.1 compiled with 2 errors in 3135 ms
+Error: Build failed! Status Code: 1
+```
+
 ### Adding CORS headers
 
 Before you are ready to deploy, you will make one more change to our handlers, adding [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow your frontend application to make requests to the API. In your handlers, you will update the `headers` variable accordingly:
@@ -233,6 +281,55 @@ const Post = async request => {
 export default Post
 ```
 
+wrangler dev
+```java
+wrangler dev
+```
+
+Output
+```java
+🌀  Running npm install && npm run build
+
+up to date, audited 593 packages in 2s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> worker-typescript-template@1.0.0 build
+> webpack
+
+asset worker.js 6.15 KiB [emitted] (name: main) 1 related asset
+modules by path ./src/*.ts 1.62 KiB
+  ./src/index.ts 223 bytes [built] [code generated]
+  ./src/handler.ts 706 bytes [built] [code generated] [1 error]
+  ./src/posts_store.ts 725 bytes [built] [code generated]
+modules by path ./src/handlers/*.ts 1.21 KiB
+  ./src/handlers/posts.ts 597 bytes [built] [code generated]
+  ./src/handlers/post.ts 647 bytes [built] [code generated] [1 error]
+./node_modules/itty-router/dist/itty-router.min.js 546 bytes [built] [code generated]
+
+ERROR in /mnt/ap/ap/serverless-api/src/handler.ts
+./src/handler.ts 13:29-36
+[tsl] ERROR in /mnt/ap/ap/serverless-api/src/handler.ts(13,30)
+      TS7006: Parameter 'request' implicitly has an 'any' type.
+ts-loader-default_e3b0c44298fc1c14
+ @ ./src/index.ts 3:18-38
+
+ERROR in /mnt/ap/ap/serverless-api/src/handlers/post.ts
+./src/handlers/post.ts 3:19-26
+[tsl] ERROR in /mnt/ap/ap/serverless-api/src/handlers/post.ts(3,20)
+      TS7006: Parameter 'request' implicitly has an 'any' type.
+ts-loader-default_e3b0c44298fc1c14
+ @ ./src/handler.ts 9:31-57
+ @ ./src/index.ts 3:18-38
+
+webpack 5.38.1 compiled with 2 errors in 1348 ms
+Error: Build failed! Status Code: 1
+```
+
+
 ### Publishing the API
 
 With your API configured, you are ready to publish. Run `wrangler publish` in your terminal, and when you have successfully deployed your application, you should be able to make requests to your API to see data returned in the console:
@@ -241,8 +338,8 @@ With your API configured, you are ready to publish. Run `wrangler publish` in yo
 ---
 header: "Testing the API"
 ---
-$ curl serverless-api.signalnerve.workers.dev/api/posts
-$ curl serverless-api.signalnerve.workers.dev/api/posts/1
+curl serverless-api.signalnerve.workers.dev/api/posts
+curl serverless-api.signalnerve.workers.dev/api/posts/1
 ```
 
 ## Deploying a new React application to Pages
@@ -257,9 +354,9 @@ To start, create a new React app using `create-react-app` in your terminal, and 
 ---
 header: "Creating a new React application"
 ---
-$ npx create-react-app blog-frontend
-$ cd blog-frontend
-$ npm start
+npx create-react-app blog-frontend
+cd blog-frontend
+npm start
 ```
 
 Start up the app locally, and clear out the contents of `App.js`:
@@ -287,7 +384,7 @@ Add `@reach/router`:
 ---
 header: "Adding @reach/router"
 ---
-$ yarn add @reach/router
+yarn add @reach/router
 ```
 
 Import it into `App.js`, and set up a new router with two routes:
