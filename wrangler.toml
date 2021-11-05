@@ -1,10 +1,10 @@
 name = "serverless-api"
 type = "javascript"
-zone_id = ""
 account_id = "32c893914da09e7cb225d5e9c6114f45"
-route = ""
 workers_dev = true
 compatibility_date = "2021-11-04"
+route = "*myblog.com/api*"
+zone_id = "$zoneId"
 
 [build]
 command = "npm install && npm run build"

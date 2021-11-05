@@ -492,11 +492,45 @@ With your serverless API deployed, we can now build the frontend of our applicat
 
 To start, create a new React app using `create-react-app` in your terminal, and then navigate into the directory and start a local development server:
 
-```sh
+```java
 ---
 header: "Creating a new React application"
 ---
 npx create-react-app blog-frontend
+```
+
+Output
+```java
+Done in 13.00s.
+
+Created git commit.
+
+Success! Created blog-frontend at /mnt/ap/ap/blog-frontend
+Inside that directory, you can run several commands:
+
+  yarn start
+    Starts the development server.
+
+  yarn build
+    Bundles the app into static files for production.
+
+  yarn test
+    Starts the test runner.
+
+  yarn eject
+    Removes this tool and copies build dependencies, configuration files
+    and scripts into the app directory. If you do this, you can’t go back!
+
+We suggest that you begin by typing:
+
+  cd blog-frontend
+  yarn start
+
+Happy hacking!
+```
+
+npm start
+```java
 cd blog-frontend
 npm start
 ```
@@ -554,7 +588,14 @@ export default App;
 
 Create a new folder called `components`, and inside of it, create two files: `posts.js`, and `post.js`. These components will load the blog posts from our API, and render them. Begin with `posts.js`:
 
-```js
+```java
+mkdir src/components
+touch src/components/posts.js
+touch src/components/post.js
+```
+
+
+```java
 ---
 filename: "src/components/posts.js"
 ---
@@ -643,6 +684,30 @@ Publishing your project with Cloudflare Pages is an easy, two-step process: firs
 Pages will deploy a new version of your site each time you publish and will set up preview deployments whenever you open a new pull request.
 
 To push your project to GitHub, [create a new repository](https://repo.new), and follow the instructions to push your local Git repository to GitHub.
+
+
+```java
+gh repo create blog-frontend
+```
+
+Output
+```java
+gh repo create blog-frontend
+? Visibility Public
+? Would you like to add a .gitignore? No
+? Would you like to add a license? No
+? This will create the "blog-frontend" repository on GitHub. Continue? Yes
+✓ Created repository coding-to-music/blog-frontend on GitHub
+? Create a local project directory for "coding-to-music/blog-frontend"? No
+```
+
+Go to the new repo on github and copy the following:
+```java
+git remote add origin git@github.com:coding-to-music/blog-frontend.git
+git branch -M main
+git push -u origin main
+```
+
 
 Deploy your site to Pages by logging into the [Cloudflare dashboard](https://dash.cloudflare.com/) > **Account Home** > **Pages** and selecting **Create a project**. Select the new GitHub repository that you created and, in the **Set up builds and deployments** section, choose **React** -- Pages will automatically apply the correct build settings for you.
 
